@@ -27,7 +27,7 @@ class TennisGame1 (val player1Name : String, val player2Name : String) extends T
 
           }
       }
-      else if (m_score1>=4 || m_score2>=4)
+      else if (aPlayerHasScoredFortyOrMore)
       {
           val minusResult = m_score1-m_score2
           if (minusResult==1) score ="Advantage player1"
@@ -51,6 +51,10 @@ class TennisGame1 (val player1Name : String, val player2Name : String) extends T
           }
       }
     return score
+  }
+
+  private def aPlayerHasScoredFortyOrMore = {
+    m_score1 >= 4 || m_score2 >= 4
   }
 
   private def isATie = {
