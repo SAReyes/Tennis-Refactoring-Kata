@@ -17,7 +17,7 @@ class TennisGame1 (val player1Name : String, val player2Name : String) extends T
   def calculateScore() : String = {
       var score : String = ""
       var tempScore=0
-      if (m_score1==m_score2)
+      if (isATie)
       {
         score = m_score1 match {
               case 0 =>  "Love-All"
@@ -53,6 +53,9 @@ class TennisGame1 (val player1Name : String, val player2Name : String) extends T
     return score
   }
 
+  private def isATie = {
+    m_score1 == m_score2
+  }
 }
 
 object TennisGame1 {
