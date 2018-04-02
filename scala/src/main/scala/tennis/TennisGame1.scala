@@ -37,22 +37,17 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
 
       return score
     }
+   
+    s"${translateScoreToText(m_score1)}-${translateScoreToText(m_score2)}"
+  }
 
-    for (i <- 1 until 3 by 1) {
-      if (i == 1) tempScore = m_score1
-      else {
-        score += "-";
-        tempScore = m_score2;
-      }
-      val tempScore2 = tempScore match {
-        case 0 => "Love"
-        case 1 => "Fifteen"
-        case 2 => "Thirty"
-        case 3 => "Forty"
-      }
-      score += tempScore2
+  private def translateScoreToText(tempScore: Int) = {
+    tempScore match {
+      case 0 => "Love"
+      case 1 => "Fifteen"
+      case 2 => "Thirty"
+      case 3 => "Forty"
     }
-    score
   }
 
   private def aPlayerHasScoredFortyOrMore = {
