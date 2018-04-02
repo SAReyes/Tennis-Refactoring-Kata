@@ -16,9 +16,6 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
   }
 
   def calculateScore(): String = {
-    var score: String = ""
-    var tempScore = 0
-
     if (isATie) {
       return m_score1 match {
         case 0 => "Love-All"
@@ -29,16 +26,28 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
     }
 
     if (aPlayerHasScoredFortyOrMore) {
-      val minusResult = m_score1 - m_score2
-      if (minusResult == 1) score = "Advantage player1"
-      else if (minusResult == -1) score = "Advantage player2"
-      else if (minusResult >= 2) score = "Win for player1"
-      else score = "Win for player2"
+      val advantageOrWin = computeAdventageOrWin(m_score1, m_score2)
+      val winningPlayer = computeWinningPlayer(m_score1, m_score2)
 
-      return score
+      return s"$advantageOrWin $winningPlayer"
     }
-   
+
     s"${translateScoreToText(m_score1)}-${translateScoreToText(m_score2)}"
+  }
+
+  private def computeWinningPlayer(m_score1: Int, m_score2: Int): String = {
+    m_score1.compareTo(m_score2) match {
+      case 1 => Player1Name
+      case -1 => Player2Name
+      case _ => ""
+    }
+  }
+
+  private def computeAdventageOrWin(m_score1: Int, m_score2: Int): String = {
+    Math.abs(m_score1 - m_score2) match {
+      case 1 => "Advantage"
+      case _ => "Win for"
+    }
   }
 
   private def translateScoreToText(tempScore: Int) = {
@@ -60,7 +69,10 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
 }
 
 object TennisGame1 {
+  val Player1Name = "player1"
+  val Player2Name = "player2"
+
   private def isPlayerOne(playerName: String) = {
-    playerName == "player1"
+    playerName == Player1Name
   }
 }
