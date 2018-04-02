@@ -17,14 +17,11 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
 
   def calculateScore(): String = {
     if (isATie) {
-      return translatePoint andThen { _ + "-All" } orElse translateDeuce apply m_score1
+      return translatePoint andThen appendAll orElse translateDeuce apply m_score1
     }
 
     if (aPlayerHasScoredFortyOrMore) {
-      val advantageOrWin = computeAdventageOrWin(m_score1, m_score2)
-      val winningPlayer = computeWinningPlayer(m_score1, m_score2)
-
-      return s"$advantageOrWin $winningPlayer"
+      return s"${computeAdventageOrWin(m_score1, m_score2)} ${computeWinningPlayer(m_score1, m_score2)}"
     }
 
     s"${translateScoreToText(m_score1)}-${translateScoreToText(m_score2)}"
@@ -60,10 +57,14 @@ object TennisGame1 {
   private val translateForty: PartialFunction[Int, String] = {
     case 3 => "Forty"
   }
+
   private val translateDeuce: PartialFunction[Int, String] = {
     case _ => "Deuce"
   }
 
+  private val appendAll: String => String = {
+    _ + "-All"
+  }
 
   private def computeWinningPlayer(m_score1: Int, m_score2: Int): String = {
     m_score1.compareTo(m_score2) match {
