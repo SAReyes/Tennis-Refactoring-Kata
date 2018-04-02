@@ -17,12 +17,7 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
 
   def calculateScore(): String = {
     if (isATie) {
-      return m_score1 match {
-        case 0 => "Love-All"
-        case 1 => "Fifteen-All"
-        case 2 => "Thirty-All"
-        case _ => "Deuce"
-      }
+      return translatePoint andThen { _ + "-All" } orElse translateDeuce apply m_score1
     }
 
     if (aPlayerHasScoredFortyOrMore) {
@@ -33,30 +28,6 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
     }
 
     s"${translateScoreToText(m_score1)}-${translateScoreToText(m_score2)}"
-  }
-
-  private def computeWinningPlayer(m_score1: Int, m_score2: Int): String = {
-    m_score1.compareTo(m_score2) match {
-      case 1 => Player1Name
-      case -1 => Player2Name
-      case _ => ""
-    }
-  }
-
-  private def computeAdventageOrWin(m_score1: Int, m_score2: Int): String = {
-    Math.abs(m_score1 - m_score2) match {
-      case 1 => "Advantage"
-      case _ => "Win for"
-    }
-  }
-
-  private def translateScoreToText(tempScore: Int) = {
-    tempScore match {
-      case 0 => "Love"
-      case 1 => "Fifteen"
-      case 2 => "Thirty"
-      case 3 => "Forty"
-    }
   }
 
   private def aPlayerHasScoredFortyOrMore = {
@@ -74,5 +45,38 @@ object TennisGame1 {
 
   private def isPlayerOne(playerName: String) = {
     playerName == Player1Name
+  }
+
+  private def translateScoreToText(tempScore: Int) = {
+    translatePoint orElse translateForty apply tempScore
+  }
+
+  private val translatePoint: PartialFunction[Int, String] = {
+    case 0 => "Love"
+    case 1 => "Fifteen"
+    case 2 => "Thirty"
+  }
+
+  private val translateForty: PartialFunction[Int, String] = {
+    case 3 => "Forty"
+  }
+  private val translateDeuce: PartialFunction[Int, String] = {
+    case _ => "Deuce"
+  }
+
+
+  private def computeWinningPlayer(m_score1: Int, m_score2: Int): String = {
+    m_score1.compareTo(m_score2) match {
+      case 1 => Player1Name
+      case -1 => Player2Name
+      case _ => ""
+    }
+  }
+
+  private def computeAdventageOrWin(m_score1: Int, m_score2: Int): String = {
+    Math.abs(m_score1 - m_score2) match {
+      case 1 => "Advantage"
+      case _ => "Win for"
+    }
   }
 }
